@@ -1,11 +1,20 @@
 import { Link, useParams } from 'react-router-dom'
 import { Row, Col, Image, ListGroup, Card, Button, ListGroupItem } from "react-bootstrap";
-import products from '../products'
-import Rating from '../components/Rating';
 
+import Rating from '../components/Rating';
+import { useState, useEffect } from "react";
 const ProductScreen = () => {
+    const [product, setProduct] = useState([])
     const { id: productId } = useParams()
-    const product = products.find((p) => p._id === productId)
+    useEffect(() => {
+        {
+            const fetchProduct = async () => {
+                const { data } = await axios.get(`/api/products/${productId}`)
+                setProduct(data)
+            }
+            fetchProduct()
+        }
+    }, [])
     console.log(product)
     return (
         <>
@@ -40,7 +49,7 @@ const ProductScreen = () => {
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
-                                <Button className='btn-block' type='button' disabled={product.countInStock ===0}>Add to Cart</Button>
+                                <Button className='btn-block' type='button' disabled={product.countInStock === 0}>Add to Cart</Button>
                             </ListGroup.Item>
                         </ListGroup>
                     </Card>
